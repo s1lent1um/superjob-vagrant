@@ -37,6 +37,7 @@ install php7.0-opcache
 install php7.0-xml
 install php-memcached
 install php-imagick
+install php-amqp
 #install php7.0-xhprof
 install php-xdebug
 
@@ -48,6 +49,7 @@ install-mysql
 install-composer
 
 install-php7-module blitz
+install-php7-module igbinary
 
 config-bash
 config-hosts

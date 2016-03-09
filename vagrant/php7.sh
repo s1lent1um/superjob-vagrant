@@ -15,32 +15,41 @@ config-php7-cli() {
 
 install-php7-module() {
     module=$1
-    module=php7-$module
+    package=php7-$module
     back_dir=`pwd`
-    installed $module
+    installed $package
 
     if [ "$?" -gt 0 ]; then
         ensure-dir tmpbuild
         rm -rf tmpbuild/*
         cd tmpbuild
 
-        `install-php7-module-$module` || exiterr $? "unable to install $module"
+        install-php7-module-$module || exiterr $? "unable to install $package"
 
         echo "extension=$module.so" > /etc/php/7.0/mods-available/${module}.ini
         phpenmod $module
         cd $back_dir
         rm -rf tmpbuild/
-        installed $module ok
+        installed $package ok
     fi
 }
 
 install-php7-module-blitz() {
     module=blitz
 
-    wget https://github.com/alexeyrybak/blitz/archive/0.9.1.tar.gz -O blitz.tar.gz || exiterr $? "unable to download $module"
-    tar -zxf blitz.tar.gz || exiterr $? "unable to unpack $module"
-    cd blitz-*/
-    ./configure && make || exiterr $? "unable to build $module"
+    git clone https://github.com/alexeyrybak/blitz.git blitz || exiterr $? "unable to download $module"
+    cd $module
+    git checkout origin/php7
+    phpize && ./configure && make || exiterr $? "unable to build $module"
+    make install || exiterr $? "unable to install $module"
+}
+
+install-php7-module-igbinary() {
+    module=igbinary
+
+    git clone https://github.com/igbinary/igbinary7.git $module || exiterr $? "unable to download $module"
+    cd $module
+    phpize && ./configure && make || exiterr $? "unable to build $module"
     make install || exiterr $? "unable to install $module"
 }
 

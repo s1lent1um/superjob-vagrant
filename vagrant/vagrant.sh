@@ -218,7 +218,7 @@ config-locale() {
   if [ "$?" -gt 0 ]; then
     locale-gen ru_RU.UTF-8
     exiterr $? "Failed to generate locale ru_RU.UTF-8"
-    sed -i "s/LC_ALL=\"en_US\"/LC_ALL=\"ru_RU.UTF-8\"/" /etc/default/locale
+    copy ${PROJECT_DIR}/vagrant/locale /etc/default/locale
     exiterr $? "Failed to replace locale into /etc/default/locale"
     dpkg-reconfigure locales
     exiterr $? "Failed to reconfigure locale"
