@@ -1,0 +1,21 @@
+server {
+    listen 80;
+
+    server_name superjob.dev;
+    root /srv/src/web/;
+
+    access_log off;
+    error_log /var/log/www.log;
+    client_max_body_size 1024m;
+
+    location / {
+        index index.php index.html;
+        try_files $uri /index.php?$args;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+        fastcgi_index index.php;
+        include fastcgi_params;
+    }
+}
