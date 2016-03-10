@@ -24,7 +24,9 @@ install pkg-config
 install git-core
 install curl
 install nginx
+install apache2
 
+install libapache2-mod-php7.0
 install php7.0-fpm
 install php7.0-cli
 install php7.0-dev
@@ -32,6 +34,7 @@ install php7.0-mysql
 install php7.0-curl
 install php7.0-gd
 install php7.0-json
+install php7.0-mbstring
 install php7.0-mcrypt
 install php7.0-opcache
 install php7.0-xml
@@ -50,12 +53,16 @@ install-composer
 
 install-php7-module blitz
 install-php7-module igbinary
+#install-php7-module mysqllexer
 
 config-bash
 config-hosts
 config-locale
 config-php7-fpm
 config-php7-cli
+config-php7-apache
+config-apache
+config-nginx-cert
 config-nginx
 #config-mysql
 
@@ -65,6 +72,7 @@ composer-require "phpunit/phpunit-selenium=*"
 composer-require "phpunit/php-invoker=*"
 
 service php7.0-fpm restart
+service apache2 restart
 service nginx restart
 
 chown -R vagrant /vagrant

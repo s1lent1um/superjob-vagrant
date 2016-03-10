@@ -190,21 +190,30 @@ config-php-cli() {
   copy ${PROJECT_DIR}/vagrant/php.ini /etc/php5/cli/php.ini
 }
 
+config-nginx-cert() {
+    configured nginx-cert
+    if [ "$?" -gt 0 ]; then
+        ensure-dir /etc/nginx/certs/
+        openssl req -x509 -batch -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/certs/0sjob.ru.key -out /etc/nginx/certs/0sjob.ru.crt
+        openssl req -x509 -batch -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/certs/0sjob.uz.key -out /etc/nginx/certs/0sjob.uz.crt
+        openssl req -x509 -batch -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/certs/0sjob.ua.key -out /etc/nginx/certs/0sjob.ua.crt
+        configured nginx-cert ok
+    fi
+}
+
 config-nginx() {
     ensure-dir /var/log/www/
+    ensure-dir /srv/src/nginx/logs/
+    ensure-dir /srv/src/nginx/cache/
     ensure-rm /etc/nginx/sites-enabled/default
     copy "${PROJECT_DIR}/vagrant/sites-available/*" /etc/nginx/sites-enabled/
     copy ${PROJECT_DIR}/vagrant/nginx.conf /etc/nginx/nginx.conf
 #    copy ${PROJECT_DIR}/vagrant/fastcgi_params /etc/nginx/fastcgi_params
 }
 
-config-openresty() {
-    ensure-dir /var/log/www/
-    ensure-dir /var/log/nginx/
-    ensure-rm /usr/local/openresty/nginx/conf/default
-    copy "${PROJECT_DIR}/vagrant/sites-available/*" /usr/local/openresty/nginx/conf/sites-enabled/
-    copy ${PROJECT_DIR}/vagrant/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
-#    copy ${PROJECT_DIR}/vagrant/fastcgi_params /usr/local/openresty/nginx/conf/fastcgi_params
+config-apache() {
+    ensure-rm /etc/apache2/sites-enabled/000-default.conf
+    copy "${PROJECT_DIR}/vagrant/apache2/*" /etc/apache2/
 }
 
 config-beanstalk() {
