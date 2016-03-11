@@ -27,7 +27,6 @@ ensure-rm() {
 }
 
 copy() {
-#    echo "$@"
     cp $1 $2
     exiterr $? "Failed to copy $1 into $2"
 }
@@ -242,74 +241,7 @@ config-locale() {
   fi
 }
 
-config-mysql() {
-  configured mysql
-  if [ "$?" -gt 0 ]; then
-    mysql -uroot -e "GRANT ALL ON *.* TO 'shakes'@'%' IDENTIFIED BY 'uVnYMcQvtQop9fpsD6Kc'; FLUSH PRIVILEGES;" || exiterr $? "Unable to configure mysql user shakes"
-    mysql -uroot -e "GRANT ALL ON *.* TO 'shakes_console'@'%' IDENTIFIED BY 'tyFoeZgyRWXqGx4KCmmV'; FLUSH PRIVILEGES;" || exiterr $? "Unable to configure mysql user shakes_console"
-    mysql -uroot -e "GRANT ALL ON *.* TO 'shakes_tests'@'%' IDENTIFIED BY '6FjGjcWBPEDvHox7bMcg'; FLUSH PRIVILEGES;" || exiterr $? "Unable to configure mysql user shakes_tests"
-    mysql -uroot -e "GRANT ALL ON *.* TO 'partners2'@'%' IDENTIFIED BY 'HVpGl2k1CXK5DfWl'; FLUSH PRIVILEGES;" || exiterr $? "Unable to configure mysql user partners2"
-    mysql -uroot -e "CREATE DATABASE IF NOT EXISTS partners COLLATE utf8_general_ci;" || exiterr $? "Unable to configure mysql db partners"
-    mysql -uroot -e "CREATE DATABASE IF NOT EXISTS shakes COLLATE utf8_general_ci;" || exiterr $? "Unable to configure mysql db shakes"
-    mysql -uroot -e "CREATE DATABASE IF NOT EXISTS shakes_stats COLLATE utf8_general_ci;" || exiterr $? "Unable to configure mysql db shakes_stats"
-    mysql -uroot -e "CREATE DATABASE IF NOT EXISTS shakes_tests COLLATE utf8_general_ci;" || exiterr $? "Unable to configure mysql db shakes_tests"
-    mysql -uroot -e "CREATE DATABASE IF NOT EXISTS shakes_stats_tests COLLATE utf8_general_ci;" || exiterr $? "Unable to configure mysql db shakes_stats_tests"
-    configured mysql ok
-  fi
-}
-
-
-
-config-mongo() {
-    configured mongo
-    if [ "$?" -gt 0 ]; then
-        ensure-dir /var/log/mongodb
-        chown mongodb:mongodb /var/log/mongodb
-        ensure-dir /var/lib/mongodb/mongo1/
-        ensure-dir /var/lib/mongodb/mongo2/
-        ensure-dir /var/lib/mongodb/mongoc/
-        ensure-dir /var/lib/mongodb/mongos/
-        chown mongodb:mongodb -R /var/lib/mongodb
-        copy "${PROJECT_DIR}/vagrant/mongo/*.conf" /etc/
-        configured mongo ok
-    fi
-}
-
-config-db() {
-    configured db
-    if [ "$?" -gt 0 ]; then
-        mongo admin --eval 'sh.addShard("localhost:27011")'
-        exiterr $? "Failed to add shard mongo1"
-        mongo admin --eval 'sh.addShard("localhost:27012")'
-        exiterr $? "Failed to add shard mongo2"
-#        mongo posts --eval 'db.createCollection("hub");sh.enableSharding("posts");'
-#        exiterr $? "Failed to enable sharding"
-        # TODO: restore all mongo dumps
-#        mongorestore -d router ${PROJECT_DIR}/vagrant/mongo/router/
-#        exiterr $? "Failed to restore router"
-        configured db ok
-    fi
-}
-
 
 config-upstart() {
-    configured upstart-mongo
-    if [ "$?" -gt 0 ]; then
-        stop mongod
-        if [ -f /etc/init/mongod.conf ]; then
-            mv /etc/init/mongod.conf /etc/init/mongod.conf.bak
-        fi
-        copy "${PROJECT_DIR}/vagrant/upstart/*.conf" /etc/init/
-        start mongoc
-        exiterr $? "Failed to start mongoc"
-        start mongo1
-        exiterr $? "Failed to start mongo1"
-        start mongo2
-        exiterr $? "Failed to start mongo2"
-        sleep 2
-        start mongos
-        exiterr $? "Failed to start mongos"
-        configured upstart-mongo ok
-        sleep 2
-    fi
+    copy "${PROJECT_DIR}/vagrant/upstart/*" /etc/init/
 }

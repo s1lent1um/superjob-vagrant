@@ -3,7 +3,13 @@ PROJECT_DIR="/vagrant"
 
 CURRENT_DIR=$(pwd)
 
+checkout-project() {
+    installed checkout-project
+    if [ "$?" -gt 0 ]; then
 
+        installed checkout-project ok
+    fi
+}
 config-php7-fpm() {
   copy ${PROJECT_DIR}/vagrant/php.ini /etc/php/7.0/fpm/php.ini
   copy ${PROJECT_DIR}/vagrant/fpm.conf /etc/php/7.0/fpm/pool.d/www.conf
@@ -62,7 +68,6 @@ install-php7-module-mysqllexer() {
 
     git clone ilyasov@git.superjob.local:/base/git/mysqllexer.git $module || exiterr $? "unable to download $module"
     cd $module
-    git checkout origin/php56
     phpize && ./configure && make || exiterr $? "unable to build $module"
     make install || exiterr $? "unable to install $module"
 }

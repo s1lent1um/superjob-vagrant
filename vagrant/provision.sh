@@ -53,7 +53,7 @@ install-composer
 
 install-php7-module blitz
 install-php7-module igbinary
-#install-php7-module mysqllexer
+install-php7-module mysqllexer
 
 config-bash
 config-hosts
