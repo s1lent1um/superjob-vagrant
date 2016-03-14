@@ -3,6 +3,11 @@ PROJECT_DIR="/vagrant"
 
 CURRENT_DIR=$(pwd)
 
+ssh-copy() {
+  chmod 600 ~vagrant/.ssh/id_rsa && chown -R vagrant:vagrant ~vagrant/.ssh/
+  cp -r ~vagrant/.ssh/ ~/ && chown -R root:root ~/.ssh/
+}
+
 exiterr() {
   if [ "$1" -gt 0 ]; then
     if [ ! -z "$2" ]; then
@@ -202,8 +207,8 @@ config-nginx-cert() {
 
 config-nginx() {
     ensure-dir /var/log/www/
-    ensure-dir /srv/src/nginx/logs/
-    ensure-dir /srv/src/nginx/cache/
+    ensure-dir /www/nginx/logs/
+    ensure-dir /www/nginx/cache/
     ensure-rm /etc/nginx/sites-enabled/default
     copy "${PROJECT_DIR}/vagrant/sites-available/*" /etc/nginx/sites-enabled/
     copy ${PROJECT_DIR}/vagrant/nginx.conf /etc/nginx/nginx.conf

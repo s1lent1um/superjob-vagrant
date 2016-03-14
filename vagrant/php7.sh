@@ -66,7 +66,7 @@ install-php7-module-igbinary() {
 install-php7-module-mysqllexer() {
     module=mysqllexer
 
-    git clone ilyasov@git.superjob.local:/base/git/mysqllexer.git $module || exiterr $? "unable to download $module"
+    git clone git.superjob.ru:/base/git/mysqllexer.git $module || exiterr $? "unable to download $module"
     cd $module
     phpize && ./configure && make || exiterr $? "unable to build $module"
     make install || exiterr $? "unable to install $module"

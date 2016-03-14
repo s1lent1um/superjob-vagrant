@@ -8,6 +8,8 @@ else
     . /vagrant/vagrant/php7.sh
 fi
 
+ssh-copy
+
 ensure-dir /var/vagrant
 
 update-apt
@@ -18,7 +20,7 @@ install libcurl3-openssl-dev
 
 add-repository ppa:nginx/stable
 add-php7-repository
-#apt-get update
+apt-get update
 
 install pkg-config
 install git-core
@@ -70,6 +72,12 @@ composer-require "phpunit/phpunit=4.8.*"
 composer-require "phpunit/dbunit=1.2.*"
 composer-require "phpunit/phpunit-selenium=*"
 composer-require "phpunit/php-invoker=*"
+
+if [ -f ./project.sh ]; then
+    . ./project.sh
+else
+    . /vagrant/vagrant/project.sh
+fi
 
 service php7.0-fpm restart
 service apache2 restart
