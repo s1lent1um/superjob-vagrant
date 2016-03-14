@@ -9,6 +9,7 @@ if [ ! -d /srv/src/0sjob ]; then
     cd /srv/src/0sjob
 
     git submodule update --init --recursive
+    composer install
 
     php bin/create-dirs.php --domain=0sjob.ru
     php bin/mkvhosts.php --name=0sjob --apache_ver=2.4 --port=81
@@ -16,3 +17,4 @@ if [ ! -d /srv/src/0sjob ]; then
 
     cd $BACK_DIR
 fi
+cat /srv/src/0sjob/config/nginx-vhosts.conf | sed 's/listen[[:space:]]*127.0.0.1:/listen /g' > /vagrant/vagrant/sites-available/nginx-vhosts.conf

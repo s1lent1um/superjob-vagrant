@@ -78,7 +78,7 @@ fi
 
 config-apache /srv/src/0sjob/config/vhosts.conf
 config-nginx-cert
-config-nginx /srv/src/0sjob/config/nginx-vhosts.conf
+config-nginx
 
 
 service php7.0-fpm restart
