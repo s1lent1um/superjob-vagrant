@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+ensure-dir /www/nginx/logs/
+ensure-dir /www/nginx/cache/
+
 if [ ! -d /srv/src/0sjob ]; then
     git clone git.superjob.local:/base/git/superjob.git/ /srv/src/0sjob || exiterr $? "unable to checkout THE PROJECT"
     BACK_DIR=`pwd`

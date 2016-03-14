@@ -173,21 +173,29 @@ config-nginx-cert() {
 }
 
 config-nginx() {
+    if [ -z "$1" ]; then
+        VHOSTS_FILE="${PROJECT_DIR}/vagrant/sites-available/*"
+    else
+        VHOSTS_FILE="$1"
+    fi
     ensure-dir /var/log/www/
-    ensure-dir /www/nginx/logs/
-    ensure-dir /www/nginx/cache/
     ensure-rm /etc/nginx/sites-enabled/default
-    copy "${PROJECT_DIR}/vagrant/sites-available/*" /etc/nginx/sites-enabled/
+    copy $VHOSTS_FILE /etc/nginx/sites-enabled/
     copy ${PROJECT_DIR}/vagrant/nginx.conf /etc/nginx/nginx.conf
 #    copy ${PROJECT_DIR}/vagrant/fastcgi_params /etc/nginx/fastcgi_params
 }
 
 config-apache() {
+    if [ -z "$1" ]; then
+        VHOSTS_FILE="${PROJECT_DIR}/vagrant/apache2/vhosts.conf"
+    else
+        VHOSTS_FILE="$1"
+    fi
     a2enmod rewrite expires headers
     ensure-rm /etc/apache2/sites-enabled/000-default.conf
     copy "${PROJECT_DIR}/vagrant/apache2/apache2.conf" /etc/apache2/
     copy "${PROJECT_DIR}/vagrant/apache2/ports.conf" /etc/apache2/
-    copy "${PROJECT_DIR}/vagrant/apache2/vhosts.conf" /etc/apache2/sites-enabled/
+    copy $VHOSTS_FILE /etc/apache2/sites-enabled/
 }
 
 

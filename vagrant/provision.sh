@@ -76,9 +76,9 @@ else
     . /vagrant/vagrant/project.sh
 fi
 
-config-apache
+config-apache /srv/src/0sjob/config/vhosts.conf
 config-nginx-cert
-config-nginx
+config-nginx /srv/src/0sjob/config/nginx-vhosts.conf
 
 
 service php7.0-fpm restart
