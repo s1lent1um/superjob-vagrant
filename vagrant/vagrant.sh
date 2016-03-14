@@ -66,20 +66,6 @@ configured() {
     touch /var/vagrant/configured-$1
 }
 
-pecl-install() {
-  package=$1
-  package=${package%-beta}
-  package=${package%-alpha}
-  package=${package%-devel}
-  installed pecl-$package
-  if [ "$?" -gt 0 ]; then
-    printf "\n" | pecl install -a $2 $1 || exiterr $? "pecl $1 installation fault"
-    echo "extension=$package.so" > /etc/php5/mods-available/${package}.ini
-    php5enmod $package
-    installed pecl-$package ok
-  fi
-}
-
 update-apt() {
   # TODO: ttl
   configured apt-update
@@ -102,17 +88,6 @@ install-mysql() {
   fi
 }
 
-
-install-openresty() {
-    installed openresty
-    if [ "$?" -gt 0 ]; then
-        wget http://info.8bitgroup.com/pkgs/openresty_1.7.4.1_amd64.deb
-        wget http://info.8bitgroup.com/pkgs/libip2location7_7.0.0-1_amd64.deb
-        dpkg -i libip2location7_7.0.0-1_amd64.deb openresty_1.7.4.1_amd64.deb
-        installed openresty ok
-
-    fi
-}
 
 install-composer() {
     installed php-composer
@@ -157,15 +132,6 @@ add-php7-repository() {
   fi
 }
 
-add-docker-repository() {
-  configured docker-repository
-  if [ "$?" -gt 0 ]; then
-    apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-    exiterr $? "Failed to add the docker repository key"
-    echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main' > /etc/apt/sources.list.d/docker.list
-    configured docker-repository ok
-  fi
-}
 add-repository() {
   alias=`echo $1 | sed 's/[\/:]/-/g'`
   configured $alias
@@ -225,11 +191,6 @@ config-apache() {
     copy "${PROJECT_DIR}/vagrant/apache2/apache2.conf" /etc/apache2/
     copy "${PROJECT_DIR}/vagrant/apache2/ports.conf" /etc/apache2/
     copy "${PROJECT_DIR}/vagrant/apache2/vhosts.conf" /etc/apache2/sites-enabled/
-}
-
-config-beanstalk() {
-    copy ${PROJECT_DIR}/vagrant/beanstalkd /etc/default/beanstalkd
-    service beanstalkd restart
 }
 
 
