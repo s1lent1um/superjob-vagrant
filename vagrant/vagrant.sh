@@ -96,6 +96,7 @@ install-composer() {
         mv composer.phar /usr/local/bin/composer
         token=`cat ${PROJECT_DIR}/token | awk '{print $1;}'`
         su vagrant -c "composer config -g github-oauth.github.com ${token}"
+        su vagrant -c "composer config -g secure-http false"
         composer-require "fxp/composer-asset-plugin:~1.1"
         installed php-composer ok
     fi

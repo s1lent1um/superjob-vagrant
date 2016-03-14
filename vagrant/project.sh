@@ -9,7 +9,8 @@ if [ ! -d /srv/src/0sjob ]; then
     cd /srv/src/0sjob
 
     git submodule update --init --recursive
-    composer install
+    su vagrant -c "composer config -g secure-http false"
+    su vagrant -c "composer install --no-interaction"
 
     php bin/create-dirs.php --domain=0sjob.ru
     php bin/mkvhosts.php --name=0sjob --apache_ver=2.4 --port=81
