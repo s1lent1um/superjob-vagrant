@@ -149,6 +149,7 @@ config-hosts() {
 
 config-bash() {
   copy ${PROJECT_DIR}/vagrant/.bashrc ~vagrant/.bashrc
+  copy ${PROJECT_DIR}/vagrant/environment /etc/environment
 }
 
 config-php-fpm() {
@@ -183,10 +184,6 @@ config-nginx() {
 
 config-apache() {
     a2enmod rewrite expires headers
-    ensure-dir /srv/src/0sjob.public/
-    ensure-dir /srv/src/0sjob.var/apache/
-    ensure-dir /srv/src/0sjob.var/cache/
-    ensure-dir /srv/src/0sjob.var/error_logs/
     ensure-rm /etc/apache2/sites-enabled/000-default.conf
     copy "${PROJECT_DIR}/vagrant/apache2/apache2.conf" /etc/apache2/
     copy "${PROJECT_DIR}/vagrant/apache2/ports.conf" /etc/apache2/

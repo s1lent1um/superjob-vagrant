@@ -63,9 +63,6 @@ config-locale
 config-php7-fpm
 config-php7-cli
 config-php7-apache
-config-apache
-config-nginx-cert
-config-nginx
 #config-mysql
 
 composer-require "phpunit/phpunit=4.8.*"
@@ -78,6 +75,11 @@ if [ -f ./project.sh ]; then
 else
     . /vagrant/vagrant/project.sh
 fi
+
+config-apache
+config-nginx-cert
+config-nginx
+
 
 service php7.0-fpm restart
 service apache2 restart
